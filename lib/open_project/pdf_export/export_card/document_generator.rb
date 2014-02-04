@@ -62,6 +62,9 @@ module OpenProject::PdfExport::ExportCard
     end
 
     def render_pages
+      # Note: These values are hard coded right now because I'm not sure if we want to
+      # complicate matters by having them on the config object. I don't really like having
+      # them here though:/
       card_padding = 10
       group_padding = 5
       text_padding = 5

@@ -47,13 +47,14 @@ module OpenProject::PdfExport::ExportCard
         end
       end
 
-      # Assign the row height, ignoring groups
-      heights = assign_row_heights(rows)
-
       text_padding = @orientation[:text_padding]
       group_padding = @orientation[:group_padding]
       current_row = 0
-      current_y_offset = text_padding
+      current_y_offset = group_padding
+
+      # Assign the row height, ignoring groups
+      available_height = @orientation[:height] - (group_padding * (@groups_config.count + 1))
+      heights = assign_row_heights(rows, available_height)
 
       # Initialize groups
       @groups_config.each_with_index do |(g_key, g_value), i|
@@ -64,23 +65,22 @@ module OpenProject::PdfExport::ExportCard
           y_offset: @orientation[:height] - current_y_offset,
           x_offset: 0,
           width: @orientation[:width],
-          height: group_height,
+          height: group_height - (group_padding / 2),
           row_heights: row_heights,
           text_padding: text_padding,
           group_padding: group_padding
         }
         @group_elements << GroupElement.new(@pdf, group_orientation, g_value, @work_package)
 
-        current_y_offset += group_height
+        current_y_offset += group_height + group_padding
         current_row += row_count
       end
     end
 
-    def assign_row_heights(rows)
+    def assign_row_heights(rows, available_height)
       # Assign initial heights for rows in all groups
-      available = @orientation[:height] - @orientation[:text_padding]
       c = rows.count
-      assigned_heights = Array.new(c){ available / c }
+      assigned_heights = Array.new(c){ available_height / c }
 
       min_heights = min_row_heights(rows)
       diffs = assigned_heights.zip(min_heights).map {|a, m| a - m}
@@ -137,6 +137,7 @@ module OpenProject::PdfExport::ExportCard
     def min_row_height(row)
       # Look through each of the row's columns for the column with the largest minimum height
       largest = 0
+      return row["height"] if row["height"]
       row["columns"].each do |rk, rv|
         min_lines = rv["minimum_lines"] || 1
         font_size = rv["min_font_size"] || rv["font_size"] || 10
