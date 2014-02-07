@@ -73,6 +73,7 @@ group1:
   rows:
     row1:
       priority: 1
+      height: 80
       columns:
         id:
           has_label: false
@@ -123,7 +124,7 @@ group2:
           render_if_empty: true
 </pre>
 
-Any number of rows can be defined. The font_size and minimum_lines properties define how much height on the card is given to the row. The plugin will attempt to assign enough space to each of the rows, however space will be assigned based on the priorities of the the rows, with rows with lower priority (higher numbers) being reduced and removed first if there is not enough for all the data.
+Any number of rows can be defined. The font_size and minimum_lines properties define how much height on the card is given to the row. The plugin will attempt to assign enough space to each of the rows, however space will be assigned based on the priorities of the the rows, with rows with lower priority (higher numbers) being reduced and removed first if there is not enough for all the data. This can be overrided by setting the height property of the row, which will assure the given height of that row in pixels.
 
 The name of the column informs the plugin which data should be read from the model (status, due_date, id, etc.). There can be any number of columns per row. Columns are given an equal share of the row width unless a specific width % is given. If there is more text in the column than can fit into its assinged space on the card then the text will be truncated.
 
