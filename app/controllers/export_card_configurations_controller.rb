@@ -46,7 +46,11 @@ class ExportCardConfigurationsController < ApplicationController
 
   def create
     @config = ExportCardConfiguration.new(export_card_configurations_params)
+    attachments = @config.attach_files(params[:attachments])
+
     if @config.save
+      # Attachment.attach_files(@config, params[:attachments])
+
       flash[:notice] = l(:notice_successful_create)
       redirect_to :action => 'index'
     else

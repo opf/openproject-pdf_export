@@ -34,6 +34,20 @@ See doc/COPYRIGHT.md for more details.
 <P><%= f.select :orientation, [:landscape, :portrait], :required => true %></p>
 <p><%= f.text_area :rows, :required => true %></p>
 
+
+<div class="handle_attachments">
+  <% if @config.new_record? %>
+    <%= label_tag('attachments[1][file]', l(:label_attachment_plural))%>
+    <%= render :partial => 'attachments/form' %>
+  <% end %>
+
+  <% if @config.attachments.any? -%>
+    <%= label_tag('attachments[1][file]', l(:label_attachment_plural))%>
+    <%= link_to_attachments @config %>
+  <% end -%>
+</div>
+
+
 <!--[eoform:export_card_configuration]-->
 </div>
 <%= submit_tag l(@config.new_record? ? :button_create : :button_save) %>
