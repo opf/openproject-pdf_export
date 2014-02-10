@@ -129,12 +129,10 @@ class ExportCardConfiguration < ActiveRecord::Base
 
   # Required for attachments
   def attachments_deletable?(usr=User.current)
-    # TODO RS: Authorisation
     true
   end
 
   def attachments_visible?(user)
-    # TODO RS: Authorisation
     true
   end
 end
