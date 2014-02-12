@@ -87,6 +87,7 @@ class ExportCardConfiguration < ActiveRecord::Base
     end
   end
 
+  acts_as_attachable
   include OpenProject::PdfExport::Exceptions
 
   validates :name, presence: true
@@ -137,5 +138,14 @@ class ExportCardConfiguration < ActiveRecord::Base
 
   def can_deactivate?
     self.active && !is_default?
+  end
+
+  # Required for attachments
+  def attachments_deletable?(usr=User.current)
+    true
+  end
+
+  def attachments_visible?(user)
+    true
   end
 end
