@@ -73,7 +73,7 @@ module OpenProject::PdfExport::ExportCard
       row_heights = []
 
       groups.each_with_index do |(gk, gv), i|
-        enforced_group_height = gv["height"] || 0
+        enforced_group_height = gv["height"] || -1
         used_group_height = 0
         current_rows = []
 
@@ -81,9 +81,11 @@ module OpenProject::PdfExport::ExportCard
           if rv["height"]
             used_group_height += rv["height"]
             current_rows << { height: rv["height"], group: i, priority: rv["priority"] || 10 }
+            row_heights << { height: rv["height"], group: i, priority: rv["priority"] || 10 }
           else
             used_group_height += min_row_height(rv)
             current_rows << { height: min_row_height(rv), group: i, priority: rv["priority"] || 10 }
+            row_heights << { height: min_row_height(rv), group: i, priority: rv["priority"] || 10 }
           end
         end
 
@@ -92,7 +94,6 @@ module OpenProject::PdfExport::ExportCard
           (current_rows.sort_by{ |r| r[:priority]}.first)[:height] += free_space
         end
 
-        row_heights |= current_rows
         group_heights << [used_group_height, enforced_group_height].max
       end
 
