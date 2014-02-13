@@ -106,15 +106,13 @@ module OpenProject::PdfExport::ExportCard
         overflow = :truncate
         font_size = Integer(@config['font_size'])
 
-      elsif @config['min_font_size']
-        # Range given
-        overflow = :shrink_to_fit
-        min_font_size = Integer(@config['min_font_size'])
-        font_size = if @config['max_font_size']
-                      Integer(@config['max_font_size'])
-                    else
-                      min_font_size
-                    end
+        if @config['min_font_size']
+          # Range given
+          overflow = :shrink_to_fit
+          min_font_size = Integer(@config['min_font_size'])
+        else
+          min_font_size = font_size
+        end
       else
         # Default
         font_size = 12
@@ -126,8 +124,8 @@ module OpenProject::PdfExport::ExportCard
 
       # Label and text
       @has_label = @config['has_label']
+      @default_label_font_size = 12
       indented = @config['indented']
-
 
       # Flatten value to a display string
       display_value = value
@@ -145,7 +143,7 @@ module OpenProject::PdfExport::ExportCard
            :at => offset,
            :style => :bold,
            :overflow => overflow,
-           :size => font_size,
+           :size => @default_label_font_size,
            :min_font_size => min_font_size,
            :align => :left})
 
