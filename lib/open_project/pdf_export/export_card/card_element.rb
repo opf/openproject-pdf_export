@@ -38,7 +38,7 @@ module OpenProject::PdfExport::ExportCard
       RowElement.prune_empty_groups(@groups_config, work_package)
 
       # NEW
-      all_heights = assign_all_heights_new(@groups_config)
+      all_heights = assign_all_heights(@groups_config)
       reduce_rows(all_heights)
 
       text_padding = @orientation[:text_padding]
@@ -67,23 +67,31 @@ module OpenProject::PdfExport::ExportCard
       end
     end
 
-    def assign_all_heights_new(groups)
+    def assign_all_heights(groups)
       available = @orientation[:height] - (@orientation[:group_padding] * 2)
-      group_heights = Array.new
-      row_heights = Array.new
+      group_heights = []
+      row_heights = []
 
       groups.each_with_index do |(gk, gv), i|
         enforced_group_height = gv["height"] || -1
         used_group_height = 0
+        current_rows = []
 
         gv["rows"].each do |rk, rv|
           if rv["height"]
             used_group_height += rv["height"]
+            current_rows << { height: rv["height"], group: i, priority: rv["priority"] || 10 }
             row_heights << { height: rv["height"], group: i, priority: rv["priority"] || 10 }
           else
             used_group_height += min_row_height(rv)
+            current_rows << { height: min_row_height(rv), group: i, priority: rv["priority"] || 10 }
             row_heights << { height: min_row_height(rv), group: i, priority: rv["priority"] || 10 }
           end
+        end
+
+        if free_space = enforced_group_height - used_group_height and free_space > 0
+            # Increase height of heighest priority row
+          (current_rows.sort_by{ |r| r[:priority]}.first)[:height] += free_space
         end
 
         group_heights << [used_group_height, enforced_group_height].max
