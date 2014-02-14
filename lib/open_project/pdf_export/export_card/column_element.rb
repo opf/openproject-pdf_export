@@ -95,6 +95,17 @@ module OpenProject::PdfExport::ExportCard
       ''
     end
 
+    def abbreviated_formatted_text(texts, options)
+      # Note: This is fragile as it assumes that texts consists of 2 parts, the label and the content
+      options = options.merge!({ document: @pdf })
+      text_box = Prawn::Text::Formatted::Box.new(texts, options)
+      left_overs = text_box.render(:dry_run => true)
+      text = texts[1][:text]
+      left_overs.count > 0 ? text.slice(0,text.index(left_overs.first[:text]) - 5) + "[...]" : text
+    rescue Prawn::Errors::CannotFit
+      ''
+    end
+
     def localised_property_name
       @work_package.class.human_attribute_name(@localised_custom_field_name ||= @property_name)
     end
@@ -169,25 +180,26 @@ module OpenProject::PdfExport::ExportCard
           :min_font_size => min_font_size,
           :align => text_align})
       else
+        offset = [@orientation[:x_offset], @orientation[:height] - (@orientation[:text_padding] / 2)]
         options = {:height => @orientation[:height],
           :width => @orientation[:width],
           :at => offset,
           :style => font_style,
           :overflow => overflow,
-          :min_font_size => min_font_size,
           :align => text_align}
 
-        text = abbreviated_text(display_value, options)
-        texts = [{ text: label_text(value), styles: [:bold], :size => font_size },  { text: text, :size => font_size }]
+        # Need to get abbreviated text with the label and then chop off the label
+        abbreviated_text = abbreviated_formatted_text([{ text: label_text(value), styles: [:bold], :size => font_size },
+          { text: display_value, :size => font_size }], options)
+        texts = [{ text: label_text(value), styles: [:bold], :size => font_size },
+          { text: abbreviated_text, :size => font_size }]
 
         # Label and Content Textbox
-        offset = [@orientation[:x_offset], @orientation[:height] - (@orientation[:text_padding] / 2)]
         box = @pdf.formatted_text_box(texts, {:height => @orientation[:height],
           :width => @orientation[:width],
           :at => offset,
           :style => font_style,
           :overflow => overflow,
-          :min_font_size => min_font_size,
           :align => text_align})
       end
     end
