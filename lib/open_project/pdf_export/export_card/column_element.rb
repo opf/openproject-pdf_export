@@ -101,7 +101,16 @@ module OpenProject::PdfExport::ExportCard
       text_box = Prawn::Text::Formatted::Box.new(texts, options)
       left_overs = text_box.render(:dry_run => true)
       text = texts[1][:text]
-      left_overs.count > 0 ? text.slice(0,text.index(left_overs.first[:text]) - 5) + "[...]" : text
+      if left_overs.count > 0
+        if pos = text.index(left_overs.first[:text]) and !!pos && pos >= 5
+          text.slice(0, pos - 5) + "[...]"
+        else
+          # Text box is too small to fit anything in - just return empty string.
+          ""
+        end
+      else
+        text
+      end
     rescue Prawn::Errors::CannotFit
       ''
     end
