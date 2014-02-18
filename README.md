@@ -184,6 +184,8 @@ The following are all acceptable column names for use with work packages:
 * watchers
 * recipients
 
+In addition to these, the names of any custom fields which have been defined on work packages can be used. It is also possible that other plugins which are being used might add additional fields to work packages, in which case they would also be available.
+
 
 Bug Reporting
 -------------
