@@ -80,18 +80,16 @@ module OpenProject::PdfExport::ExportCard
         gv["rows"].each do |rk, rv|
           if rv["height"]
             used_group_height += rv["height"]
-            current_rows << { height: rv["height"], group: i, priority: rv["priority"] || 10 }
             row_heights << { height: rv["height"], group: i, priority: rv["priority"] || 10 }
           else
             used_group_height += min_row_height(rv)
-            current_rows << { height: min_row_height(rv), group: i, priority: rv["priority"] || 10 }
             row_heights << { height: min_row_height(rv), group: i, priority: rv["priority"] || 10 }
           end
         end
 
         if free_space = enforced_group_height - used_group_height and free_space > 0
-            # Increase height of heighest priority row
-          (current_rows.sort_by{ |r| r[:priority]}.first)[:height] += free_space
+          # Increase height of heighest priority row
+          (row_heights.select{|rh| rh[:group] == i}.sort{ |x,y| x[:priority] <=> y[:priority]}.first)[:height] += free_space
         end
 
         group_heights << [used_group_height, enforced_group_height].max
