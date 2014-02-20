@@ -30,7 +30,7 @@ class ExportCardConfiguration < ActiveRecord::Base
     REQUIRED_GROUP_KEYS = ["rows"]
     VALID_GROUP_KEYS = ["rows", "has_border", "height"]
     REQUIRED_ROW_KEYS = ["columns"]
-    VALID_ROW_KEYS = ["columns", "height", "priority"]
+    VALID_ROW_KEYS = ["columns", "height", "priority", "has_line"]
     # TODO: Security Consideration
     # Should we define which model properties are visible and if so how?
     # VALID_MODEL_PROPERTIES = [""]
