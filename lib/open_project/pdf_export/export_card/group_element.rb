@@ -23,7 +23,6 @@
 # See doc/COPYRIGHT.md for more details.
 #++
 
-
 module OpenProject::PdfExport::ExportCard
   class GroupElement
     include OpenProject::PdfExport::Exceptions
@@ -32,14 +31,14 @@ module OpenProject::PdfExport::ExportCard
       @pdf = pdf
       @orientation = orientation
       @config = config
-      @rows_config = config["rows"]
+      @rows_config = config['rows']
       @work_package = work_package
       @row_elements = []
 
       current_y_offset = 0
       row_heights = @orientation[:row_heights]
 
-      @rows_config.each_with_index do |(r_key, r_value), i|
+      @rows_config.each_with_index do |(_r_key, r_value), i|
         current_y_offset += (row_heights[i - 1]) if i > 0
         row_orientation = {
           y_offset: @orientation[:height] - current_y_offset,
@@ -63,15 +62,12 @@ module OpenProject::PdfExport::ExportCard
         @pdf.stroke_color '000000'
 
         # Draw rows
-        @row_elements.each do |row|
-          row.draw
-        end
+        @row_elements.each(&:draw)
 
-        if (@config["has_border"] or false)
+        if @config['has_border'] or false
           @pdf.stroke_bounds
         end
       end
-
     end
   end
 end

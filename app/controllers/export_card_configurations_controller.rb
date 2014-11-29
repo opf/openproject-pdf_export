@@ -23,7 +23,6 @@
 # See doc/COPYRIGHT.md for more details.
 #++
 
-
 class ExportCardConfigurationsController < ApplicationController
   layout 'admin'
 
@@ -50,19 +49,19 @@ class ExportCardConfigurationsController < ApplicationController
       flash[:notice] = l(:notice_successful_create)
       redirect_to action: 'index'
     else
-      render "new"
+      render 'new'
     end
   end
 
   def update
     if cannot_update_default
       flash[:error] = l(:error_can_not_change_name_of_default_configuration)
-      render "edit"
+      render 'edit'
     elsif @config.update_attributes(export_card_configurations_params)
       flash[:notice] = l(:notice_successful_update)
       redirect_to action: 'index'
     else
-      render "edit"
+      render 'edit'
     end
   end
 
@@ -96,7 +95,7 @@ class ExportCardConfigurationsController < ApplicationController
   private
 
   def cannot_update_default
-    @config.is_default? && export_card_configurations_params[:name].downcase != "default"
+    @config.is_default? && export_card_configurations_params[:name].downcase != 'default'
   end
 
   def export_card_configurations_params

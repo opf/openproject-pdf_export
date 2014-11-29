@@ -23,7 +23,6 @@
 # See doc/COPYRIGHT.md for more details.
 #++
 
-
 module PdfExportNavigationHelpers
   # Maps a name to a path. Used by the
   #
@@ -34,7 +33,7 @@ module PdfExportNavigationHelpers
   def path_to(page_name)
     case page_name
     when /^the export card configurations index page$/
-      "/export_card_configurations"
+      '/export_card_configurations'
 
     else
       super

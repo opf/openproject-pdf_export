@@ -36,9 +36,9 @@ module OpenProject::PdfExport
              requires_openproject: '>= 4.0.0' do
 
       menu :admin_menu,
-            :export_card_configurations,
-            {controller: '/export_card_configurations', action: 'index'},
-            {caption:    :'label_export_card_configuration_plural', html: {class: "icon2 icon-tracker"}}
+           :export_card_configurations,
+           { controller: '/export_card_configurations', action: 'index' },
+           caption:    :'label_export_card_configuration_plural', html: { class: 'icon2 icon-tracker' }
     end
   end
 end
