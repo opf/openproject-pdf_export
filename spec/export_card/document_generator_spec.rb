@@ -26,26 +26,32 @@
 require File.expand_path(File.dirname(__FILE__) + '/../spec_helper')
 
 describe OpenProject::PdfExport::ExportCard::DocumentGenerator do
-  let(:config) { ExportCardConfiguration.new({
-    name: "Default",
-    description: "This is a description",
+  let(:config) {
+    ExportCardConfiguration.new(
+    name: 'Default',
+    description: 'This is a description',
     per_page: 1,
-    page_size: "A4",
-    orientation: "landscape",
+    page_size: 'A4',
+    orientation: 'landscape',
     rows: "group1:\n  has_border: false\n  rows:\n    row1:\n      height: 50\n      priority: 1\n      columns:\n        subject:\n          has_label: false\n          font_size: 15\n    row2:\n      height: 50\n      priority: 1\n      columns:\n        non_existent:\n          has_label: true\n          font_size: 15\n          render_if_empty: true"
-  })}
+  )
+  }
 
-  let(:work_package1) { WorkPackage.new({
-    subject: "Work package 1",
-    description: "This is a description"
-  })}
+  let(:work_package1) {
+    WorkPackage.new(
+    subject: 'Work package 1',
+    description: 'This is a description'
+  )
+  }
 
-  let(:work_package2) { WorkPackage.new({
-    subject: "Work package 2",
-    description: "This is work package 2"
-  })}
+  let(:work_package2) {
+    WorkPackage.new(
+    subject: 'Work package 2',
+    description: 'This is work package 2'
+  )
+  }
 
-  describe "Single work package rendering" do
+  describe 'Single work package rendering' do
     before(:each) do
       work_packages = [work_package1]
       @generator = OpenProject::PdfExport::ExportCard::DocumentGenerator.new(config, work_packages)
@@ -67,7 +73,7 @@ describe OpenProject::PdfExport::ExportCard::DocumentGenerator do
     end
   end
 
-  describe "Multiple work package rendering" do
+  describe 'Multiple work package rendering' do
     before(:each) do
       work_packages = [work_package1, work_package2]
       @generator = OpenProject::PdfExport::ExportCard::DocumentGenerator.new(config, work_packages)

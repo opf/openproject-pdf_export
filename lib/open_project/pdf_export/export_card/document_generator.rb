@@ -26,9 +26,8 @@
 require 'prawn'
 
 module OpenProject::PdfExport::ExportCard
-  require "open_project/pdf_export/export_card/model_display/work_package_display"
+  require 'open_project/pdf_export/export_card/model_display/work_package_display'
   class DocumentGenerator
-
     attr_reader :config
     attr_reader :work_packages
     attr_reader :pdf
@@ -39,7 +38,7 @@ module OpenProject::PdfExport::ExportCard
     def initialize(config, work_packages)
       patch_models
 
-      defaults = { page_size: "A4" }
+      defaults = { page_size: 'A4' }
 
       @config = config
       @work_packages = work_packages
@@ -51,12 +50,12 @@ module OpenProject::PdfExport::ExportCard
       @paper_height = geom[1]
 
       @pdf = Prawn::Document.new(
-        :page_layout => page_layout,
-        :left_margin => 0,
-        :right_margin => 0,
-        :top_margin => 0,
-        :bottom_margin => 0,
-        :page_size => page_size)
+        page_layout: page_layout,
+        left_margin: 0,
+        right_margin: 0,
+        top_margin: 0,
+        bottom_margin: 0,
+        page_size: page_size)
     end
 
     def render
@@ -69,7 +68,7 @@ module OpenProject::PdfExport::ExportCard
       group_padding = 5
       text_padding = 5
       card_width = pdf.bounds.width - (card_padding * 2)
-      card_height = ((pdf.bounds.height - (card_padding * config.per_page )) / config.per_page) - (card_padding / config.per_page)
+      card_height = ((pdf.bounds.height - (card_padding * config.per_page)) / config.per_page) - (card_padding / config.per_page)
       card_y_offset = pdf.bounds.height - card_padding
 
       @work_packages.each_with_index do |wp, i|
