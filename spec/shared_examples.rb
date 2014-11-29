@@ -4,7 +4,7 @@ shared_examples_for "should let you create a configuration" do
     post 'create', params
   end
 
-  it { expect(response).to redirect_to :action => 'index' }
+  it { expect(response).to redirect_to action: 'index' }
   it { expect(flash[:notice]).to eq(I18n.t(:notice_successful_create)) }
 end
 

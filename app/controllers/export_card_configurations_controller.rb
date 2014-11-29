@@ -48,7 +48,7 @@ class ExportCardConfigurationsController < ApplicationController
     @config = ExportCardConfiguration.new(export_card_configurations_params)
     if @config.save
       flash[:notice] = l(:notice_successful_create)
-      redirect_to :action => 'index'
+      redirect_to action: 'index'
     else
       render "new"
     end
@@ -60,7 +60,7 @@ class ExportCardConfigurationsController < ApplicationController
       render "edit"
     elsif @config.update_attributes(export_card_configurations_params)
       flash[:notice] = l(:notice_successful_update)
-      redirect_to :action => 'index'
+      redirect_to action: 'index'
     else
       render "edit"
     end
@@ -72,7 +72,7 @@ class ExportCardConfigurationsController < ApplicationController
     else
       flash[:notice] = l(:error_can_not_delete_export_card_configuration)
     end
-    redirect_to :action => 'index'
+    redirect_to action: 'index'
   end
 
   def activate
@@ -81,7 +81,7 @@ class ExportCardConfigurationsController < ApplicationController
     else
       flash[:notice] = l(:error_can_not_activate_export_card_configuration)
     end
-    redirect_to :action => 'index'
+    redirect_to action: 'index'
   end
 
   def deactivate
@@ -90,7 +90,7 @@ class ExportCardConfigurationsController < ApplicationController
     else
       flash[:notice] = l(:error_can_not_deactivate_export_card_configuration)
     end
-    redirect_to :action => 'index'
+    redirect_to action: 'index'
   end
 
   private

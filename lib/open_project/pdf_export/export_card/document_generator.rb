@@ -51,12 +51,12 @@ module OpenProject::PdfExport::ExportCard
       @paper_height = geom[1]
 
       @pdf = Prawn::Document.new(
-        :page_layout => page_layout,
-        :left_margin => 0,
-        :right_margin => 0,
-        :top_margin => 0,
-        :bottom_margin => 0,
-        :page_size => page_size)
+        page_layout: page_layout,
+        left_margin: 0,
+        right_margin: 0,
+        top_margin: 0,
+        bottom_margin: 0,
+        page_size: page_size)
     end
 
     def render

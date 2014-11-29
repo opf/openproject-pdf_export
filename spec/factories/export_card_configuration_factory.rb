@@ -34,7 +34,7 @@ FactoryGirl.define do
     orientation "landscape"
   end
 
-  factory :default_export_card_configuration, :class => ExportCardConfiguration do
+  factory :default_export_card_configuration, class: ExportCardConfiguration do
     name "Default"
     description "This is a description"
     active true
@@ -44,7 +44,7 @@ FactoryGirl.define do
     orientation "landscape"
   end
 
-  factory :invalid_export_card_configuration, :class => ExportCardConfiguration do
+  factory :invalid_export_card_configuration, class: ExportCardConfiguration do
     name "Invalid"
     description "This is a description"
     rows "row1"
@@ -53,7 +53,7 @@ FactoryGirl.define do
     orientation "qwer"
   end
 
-  factory :active_export_card_configuration, :class => ExportCardConfiguration do
+  factory :active_export_card_configuration, class: ExportCardConfiguration do
     name "Config active"
     description "This is a description"
     active true
@@ -63,7 +63,7 @@ FactoryGirl.define do
     orientation "landscape"
   end
 
-  factory :inactive_export_card_configuration, :class => ExportCardConfiguration do
+  factory :inactive_export_card_configuration, class: ExportCardConfiguration do
     name "Config inactive"
     description "This is a description"
     active false

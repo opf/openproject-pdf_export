@@ -78,5 +78,5 @@ end
 
 Given /^I fill in valid YAML for export config rows$/ do
   valid_yaml = "groups:\n  rows:\n    row1:\n      columns:\n        id:\n          has_label: false"
-  fill_in("export_card_configuration_rows", :with => valid_yaml)
+  fill_in("export_card_configuration_rows", with: valid_yaml)
 end
