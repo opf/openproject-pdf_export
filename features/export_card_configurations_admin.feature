@@ -69,7 +69,7 @@ Feature: export card configurations Admin
     And I am admin
     And I am on the export card configurations index page
     When I follow first "Activate"
-    Then I should see "Config succesfully activated" within ".flash.notice"
+    Then I should see "Config successfully activated" within ".flash.notice"
 
    @javascript
    Scenario: Deactivate Existing Configuration
@@ -77,4 +77,4 @@ Feature: export card configurations Admin
     And I am admin
     And I am on the export card configurations index page
     When I follow first "De-activate"
-    Then I should see "Config succesfully de-activated" within ".flash.notice"
+    Then I should see "Config successfully de-activated" within ".flash.notice"
