@@ -32,13 +32,12 @@ module OpenProject::PdfExport
     include OpenProject::Plugins::ActsAsOpEngine
 
     register 'openproject-pdf_export',
-             :author_url => 'http://finn.de',
-             :requires_openproject => '>= 4.0.0' do
-
+             author_url: 'http://finn.de',
+             requires_openproject: '>= 4.0.0' do
       menu :admin_menu,
-            :export_card_configurations,
-            {:controller => '/export_card_configurations', :action => 'index'},
-            {:caption    => :'label_export_card_configuration_plural', :html => {:class => "icon2 icon-ticket-down"}}
+           :export_card_configurations,
+           { controller: '/export_card_configurations', action: 'index' },
+           caption: :label_export_card_configuration_plural, html: { class: 'icon2 icon-ticket-down' }
     end
   end
 end
