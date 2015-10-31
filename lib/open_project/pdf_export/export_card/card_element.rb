@@ -47,9 +47,9 @@ module OpenProject::PdfExport::ExportCard
       current_y_offset = text_padding
 
       # Initialize groups
-      @groups_config.each_with_index do |(g_key, g_value), i|
-        row_count = g_value["rows"].count
-        row_heights = all_heights[:row_heights].reject {|row| row[:group] != i}.map{|row| row[:height]}
+      @groups_config.each_with_index do |(_g_key, g_value), i|
+        row_count = g_value['rows'].count
+        row_heights = all_heights[:row_heights].reject { |row| row[:group] != i }.map { |row| row[:height] }
         group_height = all_heights[:group_heights][i]
         group_orientation = {
           y_offset: @orientation[:height] - current_y_offset,
@@ -69,20 +69,20 @@ module OpenProject::PdfExport::ExportCard
 
     def assign_all_heights_new(groups)
       available = @orientation[:height] - (@orientation[:group_padding] * 2)
-      group_heights = Array.new
-      row_heights = Array.new
+      group_heights = []
+      row_heights = []
 
-      groups.each_with_index do |(gk, gv), i|
-        enforced_group_height = gv["height"] || -1
+      groups.each_with_index do |(_gk, gv), i|
+        enforced_group_height = gv['height'] || -1
         used_group_height = 0
 
-        gv["rows"].each do |rk, rv|
-          if rv["height"]
-            used_group_height += rv["height"]
-            row_heights << { height: rv["height"], group: i, priority: rv["priority"] || 10 }
+        gv['rows'].each do |_rk, rv|
+          if rv['height']
+            used_group_height += rv['height']
+            row_heights << { height: rv['height'], group: i, priority: rv['priority'] || 10 }
           else
             used_group_height += min_row_height(rv)
-            row_heights << { height: min_row_height(rv), group: i, priority: rv["priority"] || 10 }
+            row_heights << { height: min_row_height(rv), group: i, priority: rv['priority'] || 10 }
           end
         end
 
@@ -102,9 +102,9 @@ module OpenProject::PdfExport::ExportCard
       groups = heights[:group_heights]
 
       priorities = *(0..rows.count - 1)
-        .zip(rows.map { |row| row[:priority] or 10 })
-        .sort {|x,y| y[1] <=> x[1]}
-        .map {|x| x[0]}
+                    .zip(rows.map { |row| row[:priority] || 10 })
+                    .sort { |x, y| y[1] <=> x[1] }
+                    .map { |x| x[0] }
 
       priorities.each do |p|
         to_reduce = rows[p]
@@ -123,13 +123,13 @@ module OpenProject::PdfExport::ExportCard
     end
 
     def min_row_height(row)
-      return row["enforced_group_height"] if row["enforced_group_height"]
+      return row['enforced_group_height'] if row['enforced_group_height']
 
       # Look through each of the row's columns for the column with the largest minimum height
       largest = 0
-      row["columns"].each do |rk, rv|
-        min_lines = rv["minimum_lines"] || 1
-        font_size = rv["min_font_size"] || rv["font_size"] || 10
+      row['columns'].each do |_rk, rv|
+        min_lines = rv['minimum_lines'] || 1
+        font_size = rv['min_font_size'] || rv['font_size'] || 10
         min_col_height = (@pdf.font.height_at(font_size) * min_lines).floor
         largest = min_col_height if min_col_height > largest
       end
@@ -144,13 +144,10 @@ module OpenProject::PdfExport::ExportCard
         @pdf.stroke_color '000000'
 
         # Draw rows
-        @group_elements.each do |group|
-          group.draw
-        end
+        @group_elements.each(&:draw)
 
         @pdf.stroke_bounds
       end
-
     end
   end
 end

@@ -31,11 +31,11 @@ module OpenProject::PdfExport::ExportCard
       @pdf = pdf
       @orientation = orientation
       @config = config
-      @columns_config = config["columns"]
+      @columns_config = config['columns']
       @work_package = work_package
       @column_elements = []
 
-      raise BadlyFormedExportCardConfigurationError.new("Badly formed YAML") if @columns_config.nil?
+      fail BadlyFormedExportCardConfigurationError.new('Badly formed YAML') if @columns_config.nil?
 
       # Initialise column elements
       x_offset = 0
@@ -54,10 +54,10 @@ module OpenProject::PdfExport::ExportCard
 
     def col_width(col_config)
       cols_count = @columns_config.count
-      w = col_config["width"]
+      w = col_config['width']
       return @orientation[:width] / cols_count if w.nil?
 
-      i = w.index("%") or w.length
+      i = w.index('%') or w.length
       Float(w.slice(0, i)) / 100 * @orientation[:width]
     end
 
@@ -65,36 +65,29 @@ module OpenProject::PdfExport::ExportCard
       top_left = [@orientation[:x_offset], @orientation[:y_offset]]
       bounds = @orientation.slice(:width, :height)
       @pdf.bounding_box(top_left, bounds) do
-        if @config["has_border"]
-          @pdf.stroke_bounds
-        end
+        @pdf.stroke_bounds if @config['has_border']
 
         # Draw columns
-        @column_elements.each do |c|
-          c.draw
-        end
+        @column_elements.each(&:draw)
       end
-
     end
 
     def self.prune_empty_groups(groups, wp)
       # Prune rows in groups
-      groups.each do |gk, gv|
-        self.prune_empty_rows(gv["rows"], wp)
+      groups.each do |_gk, gv|
+        prune_empty_rows(gv['rows'], wp)
       end
 
       # Prune empty groups
       groups.each do |gk, gv|
-        if gv["rows"].count == 0
-          groups.delete(gk)
-        end
+        groups.delete(gk) if gv['rows'].count == 0
       end
     end
 
     def self.prune_empty_rows(rows, wp)
       rows.each do |rk, rv|
-        # TODO RS: This is still only checking the first column, need to check all
-        ck, cv = rv["columns"].first
+        # TODO: RS: This is still only checking the first column, need to check all
+        ck, cv = rv['columns'].first
         if !is_existing_column?(ck, wp) || is_empty_column(ck, cv, wp)
           rows.delete(rk)
         end
@@ -107,17 +100,17 @@ module OpenProject::PdfExport::ExportCard
       elsif (field = locale_independent_custom_field(property_name, wp)) && !!field
         value = field.value
       else
-        value = ""
+        value = ''
       end
 
-      value = "" if value.is_a?(Array) && value.empty?
-      value = value.to_s if !value.is_a?(String)
+      value = '' if value.is_a?(Array) && value.empty?
+      value = value.to_s unless value.is_a?(String)
 
-      !column["render_if_empty"] && value.empty?
+      !column['render_if_empty'] && value.empty?
     end
 
     def self.is_existing_column?(property_name, wp)
-        wp.respond_to?(property_name) || is_existing_custom_field?(property_name, wp)
+      wp.respond_to?(property_name) || is_existing_custom_field?(property_name, wp)
     end
 
     def self.is_existing_custom_field?(property_name, wp)
@@ -127,7 +120,7 @@ module OpenProject::PdfExport::ExportCard
     def self.locale_independent_custom_field(property_name, wp)
       Setting.available_languages.each do |locale|
         I18n.with_locale(locale) do
-          if (fields = wp.custom_field_values.select {|cf| cf.custom_field.name == property_name} and fields.count > 0)
+          if fields = wp.custom_field_values.select { |cf| cf.custom_field.name == property_name } and fields.count > 0
             return fields.first
           end
         end
