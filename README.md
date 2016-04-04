@@ -150,6 +150,38 @@ Any number of rows can be defined. The font_size and minimum_lines properties de
 
 The name of the column informs the plugin which data should be read from the model (status, due_date, id, etc.). There can be any number of columns per row. Custom field names can also be used. Columns are given an equal share of the row width unless a specific width % is given. If there is more text in the column than can fit into its assinged space on the card then the text will be truncated.
 
+The following are all acceptable column names for use with work packages:
+
+* id
+* display_id
+* type
+* subject
+* description
+* priority
+* fixed_version
+* story_points
+* parent
+* due_date
+* status
+* done_ratio
+* estimated_hours
+* remaining_hours
+* spent_hours
+* author
+* assigned_to
+* responsible
+* category
+* start_date
+* created_at
+* updated_at
+* children
+* relations
+* watchers
+* recipients
+
+In addition to these, the names of any custom fields which have been defined on work packages can be used. It is also possible that other plugins which are being used might add additional fields to work packages, in which case they would also be available.
+
+
 Bug Reporting
 -------------
 
