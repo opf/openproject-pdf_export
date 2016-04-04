@@ -65,6 +65,10 @@ module OpenProject::PdfExport::ExportCard
       top_left = [@orientation[:x_offset], @orientation[:y_offset]]
       bounds = @orientation.slice(:width, :height)
       @pdf.bounding_box(top_left, bounds) do
+        if @config["has_line"]
+          @pdf.stroke_horizontal_rule
+        end
+
         if @config["has_border"]
           @pdf.stroke_bounds
         end
