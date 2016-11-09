@@ -9,13 +9,13 @@ Gem::Specification.new do |s|
   s.authors     = "OpenProject GmbH"
   s.email       = "info@openproject.com"
   s.homepage    = "https://community.openproject.org/projects/pdf-export"
-  s.summary     = 'OpenProject Pdf Export'
-  s.description = "Pdf Export Plugin"
+  s.summary     = 'OpenProject PDF Export'
+  s.description = "PDF Export Plugin"
   s.license     = "GPLv3"
 
   s.files = Dir["{app,config,db,lib,doc}/**/*", "README.md"]
 
-  s.add_dependency 'rails', '~> 4.2.4'
+  s.add_dependency 'rails', '~> 5.0.0'
 
   s.add_dependency "prawn", "~> 2.1.0"
 
