@@ -111,6 +111,26 @@ module OpenProject::PdfExport::ExportCard
       ''
     end
 
+    def abbreviated_formatted_text(texts, options)
+      # Note: This is fragile as it assumes that texts consists of 2 parts, the label and the content
+      options = options.merge!({ document: @pdf })
+      text_box = Prawn::Text::Formatted::Box.new(texts, options)
+      left_overs = text_box.render(:dry_run => true)
+      text = texts[1][:text]
+      if left_overs.count > 0
+        if pos = text.index(left_overs.first[:text]) and !!pos && pos >= 5
+          text.slice(0, pos - 5) + "[...]"
+        else
+          # Text box is too small to fit anything in - just return empty string.
+          ""
+        end
+      else
+        text
+      end
+    rescue Prawn::Errors::CannotFit
+      ''
+    end
+
     def localised_property_name
       @work_package.class.human_attribute_name(@localised_custom_field_name ||= @property_name)
     end
@@ -122,15 +142,13 @@ module OpenProject::PdfExport::ExportCard
         overflow = :truncate
         font_size = Integer(@config['font_size'])
 
-      elsif @config['min_font_size']
-        # Range given
-        overflow = :shrink_to_fit
-        min_font_size = Integer(@config['min_font_size'])
-        font_size = if @config['max_font_size']
-                      Integer(@config['max_font_size'])
-                    else
-                      min_font_size
-                    end
+        if @config['min_font_size']
+          # Range given
+          overflow = :shrink_to_fit
+          min_font_size = Integer(@config['min_font_size'])
+        else
+          min_font_size = font_size
+        end
       else
         # Default
         font_size = 12
@@ -142,8 +160,8 @@ module OpenProject::PdfExport::ExportCard
 
       # Label and text
       @has_label = @config['has_label']
+      @default_label_font_size = 12
       indented = @config['indented']
-
 
       # Flatten value to a display string
       display_value = value
@@ -161,7 +179,7 @@ module OpenProject::PdfExport::ExportCard
            :at => offset,
            :style => :bold,
            :overflow => overflow,
-           :size => font_size,
+           :size => @default_label_font_size,
            :min_font_size => min_font_size,
            :align => :left})
 
@@ -187,25 +205,26 @@ module OpenProject::PdfExport::ExportCard
           :min_font_size => min_font_size,
           :align => text_align})
       else
+        offset = [@orientation[:x_offset], @orientation[:height] - (@orientation[:text_padding] / 2)]
         options = {:height => @orientation[:height],
           :width => @orientation[:width],
           :at => offset,
           :style => font_style,
           :overflow => overflow,
-          :min_font_size => min_font_size,
           :align => text_align}
 
-        text = abbreviated_text(display_value, options)
-        texts = [{ text: label_text(value), styles: [:bold], :size => font_size },  { text: text, :size => font_size }]
+        # Need to get abbreviated text with the label and then chop off the label
+        abbreviated_text = abbreviated_formatted_text([{ text: label_text(value), styles: [:bold], :size => font_size },
+          { text: display_value, :size => font_size }], options)
+        texts = [{ text: label_text(value), styles: [:bold], :size => font_size },
+          { text: abbreviated_text, :size => font_size }]
 
         # Label and Content Textbox
-        offset = [@orientation[:x_offset], @orientation[:height] - (@orientation[:text_padding] / 2)]
         box = @pdf.formatted_text_box(texts, {:height => @orientation[:height],
           :width => @orientation[:width],
           :at => offset,
           :style => font_style,
           :overflow => overflow,
-          :min_font_size => min_font_size,
           :align => text_align})
       end
     end
